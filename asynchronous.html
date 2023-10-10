@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader and Player</title>
+    <style>
+        body {
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #videoPlayer {
+            border: 3rem solid gray;
+            width: 30rem;
+            height: 17rem;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="videoPlayer" controls></video>
+
+    <script>
+        const videoElement = document.getElementById('videoPlayer');
+        url = "https://static.videezy.com/system/resources/previews/000/008/443/original/Dark_Haired_Girl_confused_-what--_2.mp4"
+
+        //callbacks
+        function downloadAndPlayOne(url, callback) {
+            setTimeout(() => {
+                // Simulate no error
+                const error = null
+                // Call the callback with the error (if any) and the video data
+                callback(error);
+            }, 2000);
+
+        }
+        //Function to handle loading and palying the video
+        function handleVideo(element) {
+            element.src = url;
+            function loadVideo() {
+                element.load();
+                function playVideo() {
+                    element.play();
+                }
+            }
+        }
+
+        //Callback to handle error
+        function errorHandler(error) {
+            if (error) {
+                console.log(`There was an error starting the video: ${error.message}`);
+            } else {
+                handleVideo(videoElement)
+                console.log('Done!');
+            }
+        }
+
+        downloadAndPlayOne(url, errorHandler)
+
+        // Promises
+        function downloadAndPlayTwo(url) {
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const videoUrl = URL.createObjectURL(blob);
+                    videoElement.src = videoUrl;
+                    return videoElement.load();
+                })
+                .then(() => videoElement.play())
+                .catch(error => console.error('Error playing video:', error));
+        }
+
+        // downloadAndPlayTwo(url)
+
+
+        // Async Await
+        async function downloadAndPlayAsync(url) {
+            try {
+                const response = await fetch(url);
+                const videoData = await response.blob();
+                const videoUrl = URL.createObjectURL(videoData);
+                videoElement.src = videoUrl;
+                await videoElement.load();
+                await videoElement.play()
+            } catch (error) {
+                console.log(`There was an error playing the video: ${error}`)
+            }
+
+        }
+
+        // downloadAndPlayAsync(url)
+
+
+
+    </script>
+
+</body>
+
+</html>
